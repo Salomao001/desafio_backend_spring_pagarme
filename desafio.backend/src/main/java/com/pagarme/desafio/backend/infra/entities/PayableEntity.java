@@ -16,6 +16,7 @@ public class PayableEntity {
 
 
     public PayableEntity(Payable payable) {
+        this.id = UUID.randomUUID();
         this.status = payable.getStatus();
         this.paymentDate = payable.getPaymentDate();
         this.fee = payable.getFee();
@@ -24,7 +25,6 @@ public class PayableEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(name = "payable_status", nullable = false)
@@ -44,6 +44,6 @@ public class PayableEntity {
 
     @Setter
     @OneToOne
-    @JoinColumn(name = "transaction_id", nullable = false, updatable = false)
+    @JoinColumn(name = "transaction_id", updatable = false)
     private TransactionEntity transaction;
 }
