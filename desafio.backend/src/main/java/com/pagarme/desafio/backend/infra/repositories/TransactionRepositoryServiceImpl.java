@@ -5,10 +5,13 @@ import com.pagarme.desafio.backend.core.domain.Transaction;
 import com.pagarme.desafio.backend.core.repositories.TransactionRepositoryService;
 import com.pagarme.desafio.backend.infra.gateways.PayableEntityMapper;
 import com.pagarme.desafio.backend.infra.gateways.TransactionEntityMapper;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class TransactionRepositoryServiceImpl implements TransactionRepositoryService {
 
     private final PayableEntityMapper payableEntityMapper;
@@ -25,11 +28,12 @@ public class TransactionRepositoryServiceImpl implements TransactionRepositorySe
     }
 
     @Override
+    @Transactional
     public void save(Transaction transaction, Payable payable) {
         var transactionEnitity = transactionEntityMapper.mapToEntity(transaction);
-        transactionRepository.save(transactionEnitity);
         var payableEntity = payableEntityMapper.mapToEntity(payable);
         payableEntity.setTransaction(transactionEnitity);
+        transactionRepository.save(transactionEnitity);
         payableRepository.save(payableEntity);
     }
 
